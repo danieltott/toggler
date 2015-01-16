@@ -11,9 +11,10 @@ var handleTogglerChange = function(toggler) {
         togglerActivate = function(el) {
 
             el.each(function() {
-                el.removeClass('hidden disabled');
-                if(el.parent().closest(".disabled").length === 0) {
-                    el.find(':input').enableEl();
+                var testEl = $(this);
+                testEl.removeClass('hidden disabled');
+                if(testEl.parent().closest(".disabled").length === 0) {
+                    testEl.find(':input').enableEl();
                 }
             });
         },
