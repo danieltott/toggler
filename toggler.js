@@ -1,69 +1,140 @@
-$.fn.disableEl = function(){
-    return $(this).each( function(){ $(this).addClass("disabled").attr("disabled","disabled"); });
+var togglerActivate = function(el, onlyEnable) {
+    el.each(function() {
+        var testEl = $(this);
+        testEl.removeClass("disabled");
+        if (!onlyEnable) {
+            testEl.removeClass("hidden");
+        }
+        if (testEl.parent().closest(".disabled").length === 0) {
+            testEl.find(":input").enableEl();
+        }
+    });
 };
-$.fn.enableEl = function(){
-    return $(this).each( function(){ $(this).removeClass("disabled").removeAttr("disabled"); });
+var togglerDeactivate = function(el, onlyDisable) {
+    el.each(function() {
+        var el = $(this);
+        el.addClass("disabled");
+        if (!onlyDisable) {
+            el.addClass("hidden");
+        }
+        el.find(":input").disableEl();
+    });
 };
 
 var handleTogglerChange = function(toggler) {
+    var togglerType = toggler.data("toggler");
 
-    var togglerType = toggler.data('toggler'),
-        togglerActivate = function(el) {
+    if (togglerType === "onoff") {
+        var checkOn = $(toggler.data("toggle-on")),
+            checkOff = $(toggler.data("toggle-off"));
 
-            el.each(function() {
-                var testEl = $(this);
-                testEl.removeClass('hidden disabled');
-                if(testEl.parent().closest(".disabled").length === 0) {
-                    testEl.find(':input').enableEl();
-                }
-            });
-        },
-        togglerDeactivate = function(el) {
+        if (toggler.is(":radio")) {
+            togglerDeactivate(
+                $(
+                    "[data-toggle-group=" +
+                        toggler.data("toggle-off-group") +
+                        "]"
+                )
+            );
 
-            el.each(function() {
-                $(this).addClass('hidden disabled').find(':input').disableEl();
-            });
-        };
-
-    if(togglerType === 'onoff') {
-        var checkOn = $(toggler.data('toggle-on')),
-            checkOff = $(toggler.data('toggle-off'));
-
-        if(toggler.is(':checked')) {
-            togglerActivate(checkOn);
-            togglerDeactivate(checkOff);
-            loadUninitializedTogglers(checkOn);
+            if (toggler.is(":checked")) {
+                togglerActivate(checkOn);
+                loadUninitializedTogglers(checkOn);
+            }
+        } else {
+            if (toggler.is(":checked")) {
+                togglerActivate(checkOn);
+                togglerDeactivate(checkOff);
+                loadUninitializedTogglers(checkOn);
+            } else {
+                togglerDeactivate(checkOn);
+                togglerActivate(checkOff);
+                loadUninitializedTogglers(checkOff);
+            }
         }
-        else {
-            togglerDeactivate(checkOn);
-            togglerActivate(checkOff);
-            loadUninitializedTogglers(checkOff);
+    } else if (togglerType === "enable") {
+        var checkOn = $(toggler.data("toggle-enable")),
+            checkOff = $(toggler.data("toggle-disable"));
+
+        if (toggler.is(":radio")) {
+            togglerDeactivate(
+                $(
+                    "[data-toggle-group=" +
+                        toggler.data("toggle-disable-group") +
+                        "]"
+                ),
+                true
+            );
+
+            if (toggler.is(":checked")) {
+                togglerActivate(checkOn, true);
+                loadUninitializedTogglers(checkOn);
+            }
+        } else {
+            if (toggler.is(":checked")) {
+                togglerActivate(checkOn, true);
+                togglerDeactivate(checkOff, true);
+                loadUninitializedTogglers(checkOn);
+            } else {
+                togglerDeactivate(checkOn, true);
+                togglerActivate(checkOff, true);
+                loadUninitializedTogglers(checkOff);
+            }
+        }
+    } else if (togglerType == "button") {
+        var checkOn = $(toggler.data("toggle-on")),
+            checkOff = $(toggler.data("toggle-off"));
+
+        togglerActivate(checkOn);
+        togglerDeactivate(checkOff);
+        loadUninitializedTogglers(checkOn);
+    } else if (togglerType == "option") {
+        var option = toggler.find("option:selected"),
+            toggleOn = option.data("toggle-on");
+        if (option.data("toggle-link")) {
+            window.location = option.data("toggle-link");
+        } else {
+            togglerDeactivate(
+                $(
+                    "[data-toggle-group=" +
+                        toggler.data("toggle-off-group") +
+                        "]"
+                )
+            );
+            if (toggleOn) {
+                $.each(toggleOn.split(","), function(i, v) {
+                    var activateGroup = $("[data-toggle-id=" + v + "]");
+                    togglerActivate(activateGroup);
+                    loadUninitializedTogglers(activateGroup);
+                });
+            }
         }
     }
-    else if(togglerType == 'option') {
-        var activateGroup = $('[data-toggle-id=' + toggler.find('option:selected').data('toggle-on') + ']');
-        togglerDeactivate($('[data-toggle-group=' + toggler.data('toggle-off-group') + ']'));
-        togglerActivate(activateGroup);
-        loadUninitializedTogglers(activateGroup);
-    }
-
 };
 
-$(document).on('change', '[data-toggler]', function() {
-
-    handleTogglerChange($(this));
-
-});
+$(document)
+    .on("change", ":input[data-toggler]:not(button)", function() {
+        handleTogglerChange($(this));
+    })
+    .on("click", "button[data-toggler], a[data-toggler]", function() {
+        handleTogglerChange($(this));
+    });
 
 var loadUninitializedTogglers = function($searchEl) {
-    var $el = $searchEl || $('body');
+    var $el = $searchEl || $("body");
 
-    $el.find('[data-toggler]').trigger('change');
-
+    $el.find("[data-toggler]").trigger("change");
 };
 
 $(function() {
-
-    loadUninitializedTogglers($('body'));
-
+    loadUninitializedTogglers($("body"));
+    $("[data-toggle-off-group-once]").each(function() {
+        togglerDeactivate(
+            $(
+                '[data-toggle-group="' +
+                    $(this).attr("data-toggle-off-group-once") +
+                    '"]'
+            )
+        );
+    });
 });
