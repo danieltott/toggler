@@ -54,15 +54,15 @@ Note: data-toggle-off-group, data-toggle-on, data-toggle-group, and data-toggle-
 
 ```html
 <select data-toggler="option" data-toggle-off-group="examplegroup">
-<option data-toggle-on="show1">Show 1</option>
-<option data-toggle-on="show2">Show 2</option>
+<option data-toggle-on=".show1">Show 1</option>
+<option data-toggle-on=".show2">Show 2</option>
 <option>Show None</option>
 </select>
 
-<div data-toggle-group="examplegroup" data-toggle-id="show1">
+<div data-toggle-group="examplegroup" class="show1">
 This will be shown when "Show 1" is selected, hidden otherwise.
 </div>
-<div data-toggle-group="examplegroup" data-toggle-id="show2">
+<div data-toggle-group="examplegroup" class="show2">
 This will be shown when "Show 2" is selected, hidden otherwise.
 </div>
 ```

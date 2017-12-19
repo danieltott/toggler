@@ -103,9 +103,11 @@ var handleTogglerChange = function(toggler) {
       loadUninitializedTogglers(checkOn);
 
       break;
+
     case "option":
       var option = toggler.find("option:selected"),
-        toggleOn = option.data("toggle-on");
+        toggleOn = $(option.data("toggle-on"));
+
       if (option.data("toggle-link")) {
         window.location = option.data("toggle-link");
       } else {
@@ -116,13 +118,8 @@ var handleTogglerChange = function(toggler) {
               "]"
           )
         );
-        if (toggleOn) {
-          $.each(toggleOn.split(","), function(i, v) {
-            var activateGroup = $("[data-toggle-id=" + v + "]");
-            togglerActivate(activateGroup);
-            loadUninitializedTogglers(activateGroup);
-          });
-        }
+        togglerActivate(toggleOn);
+        loadUninitializedTogglers(toggleOn);
       }
       break;
   }
