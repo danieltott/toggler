@@ -23,20 +23,20 @@ For radio elements, when a radio is changed, every element with data-toggle-grou
 ### Example code (radio):
 
 ```html
-<label><input type="radio" data-toggler="onoff" data-toggle-on=".showwhenchecked" data-toggle-off-group="examplegroup"> Radio 1</label>
-<label><input type="radio" data-toggler="onoff" data-toggle-off-group="examplegroup"> Radio 2</label>
+<label><input type="radio" name="radiogroup" value="1" data-toggler="onoff" data-toggle-on=".showwhenchecked" data-toggle-off-group="examplegroup"> Radio 1</label>
+<label><input type="radio" name="radiogroup" value="2" data-toggler="onoff" data-toggle-off-group="examplegroup"> Radio 2</label>
 
 <div class="showwhenchecked" data-toggle-group="examplegroup">This is visible when Radio 1 is checked, hidden otherwise</div>
 ```
 
-## data-toggler="disable" (radio/checkbox)
+## data-toggler="enable" (radio/checkbox)
 
-`data-toggler="disable"` is exactly the same as `onoff` above, except that instead of hiding elements, it finds any controls inside the elements sets `disabled=true` and adds the class `disabled` to each one.
+`data-toggler="enable"` is exactly the same as `onoff` above, except that instead of hiding elements, it finds any controls inside the elements sets `disabled=true` and adds the class `disabled` to each one.
 
 ### Example code (checkbox):
 
 ```html
-<label><input type="checkbox" data-toggler="onoff" data-toggle-on=".showwhenchecked" data-toggle-off=".showwhennotchecked,.showwhennotchecked2"> Check Me!</label>
+<label><input type="checkbox" data-toggler="enable" data-toggle-enable=".showwhenchecked" data-toggle-disable=".showwhennotchecked,.showwhennotchecked2"> Check Me!</label>
 
 <div class="showwhenchecked">
 <input>
