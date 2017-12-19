@@ -25,7 +25,7 @@ var handleTogglerChange = function(toggler) {
   var togglerType = toggler.data("toggler");
 
   switch(togglerType) {
-    case "onoff") {
+    case "onoff":
       var checkOn = $(toggler.data("toggle-on")),
         checkOff = $(toggler.data("toggle-off"));
 
