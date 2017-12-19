@@ -24,91 +24,99 @@ var togglerDeactivate = function(el, onlyDisable) {
 var handleTogglerChange = function(toggler) {
   var togglerType = toggler.data("toggler");
 
-  if (togglerType === "onoff") {
-    var checkOn = $(toggler.data("toggle-on")),
-      checkOff = $(toggler.data("toggle-off"));
+  switch(togglerType) {
+    case "onoff") {
+      var checkOn = $(toggler.data("toggle-on")),
+        checkOff = $(toggler.data("toggle-off"));
 
-    if (toggler.is(":radio")) {
-      togglerDeactivate(
-        $(
-          "[data-toggle-group=" +
-            toggler.data("toggle-off-group") +
-            "]"
-        )
-      );
+      if (toggler.is(":radio")) {
+        togglerDeactivate(
+          $(
+            "[data-toggle-group=" +
+              toggler.data("toggle-off-group") +
+              "]"
+          )
+        );
 
-      if (toggler.is(":checked")) {
-        togglerActivate(checkOn);
-        loadUninitializedTogglers(checkOn);
-      }
-    } else {
-      if (toggler.is(":checked")) {
-        togglerActivate(checkOn);
-        togglerDeactivate(checkOff);
-        loadUninitializedTogglers(checkOn);
+        if (toggler.is(":checked")) {
+          togglerActivate(checkOn);
+          loadUninitializedTogglers(checkOn);
+        }
       } else {
-        togglerDeactivate(checkOn);
-        togglerActivate(checkOff);
-        loadUninitializedTogglers(checkOff);
+        if (toggler.is(":checked")) {
+          togglerActivate(checkOn);
+          togglerDeactivate(checkOff);
+          loadUninitializedTogglers(checkOn);
+        } else {
+          togglerDeactivate(checkOn);
+          togglerActivate(checkOff);
+          loadUninitializedTogglers(checkOff);
+        }
       }
-    }
-  } else if (togglerType === "enable") {
-    var checkOn = $(toggler.data("toggle-enable")),
-      checkOff = $(toggler.data("toggle-disable"));
+      break;
 
-    if (toggler.is(":radio")) {
-      togglerDeactivate(
-        $(
-          "[data-toggle-group=" +
-            toggler.data("toggle-disable-group") +
-            "]"
-        ),
-        true
-      );
+    case "enable":
+      var checkOn = $(toggler.data("toggle-enable")),
+        checkOff = $(toggler.data("toggle-disable"));
 
-      if (toggler.is(":checked")) {
-        togglerActivate(checkOn, true);
-        loadUninitializedTogglers(checkOn);
-      }
-    } else {
-      if (toggler.is(":checked")) {
-        togglerActivate(checkOn, true);
-        togglerDeactivate(checkOff, true);
-        loadUninitializedTogglers(checkOn);
+      if (toggler.is(":radio")) {
+        togglerDeactivate(
+          $(
+            "[data-toggle-group=" +
+              toggler.data("toggle-disable-group") +
+              "]"
+          ),
+          true
+        );
+
+        if (toggler.is(":checked")) {
+          togglerActivate(checkOn, true);
+          loadUninitializedTogglers(checkOn);
+        }
       } else {
-        togglerDeactivate(checkOn, true);
-        togglerActivate(checkOff, true);
-        loadUninitializedTogglers(checkOff);
+        if (toggler.is(":checked")) {
+          togglerActivate(checkOn, true);
+          togglerDeactivate(checkOff, true);
+          loadUninitializedTogglers(checkOn);
+        } else {
+          togglerDeactivate(checkOn, true);
+          togglerActivate(checkOff, true);
+          loadUninitializedTogglers(checkOff);
+        }
       }
-    }
-  } else if (togglerType == "button") {
-    var checkOn = $(toggler.data("toggle-on")),
-      checkOff = $(toggler.data("toggle-off"));
+      break;
 
-    togglerActivate(checkOn);
-    togglerDeactivate(checkOff);
-    loadUninitializedTogglers(checkOn);
-  } else if (togglerType == "option") {
-    var option = toggler.find("option:selected"),
-      toggleOn = option.data("toggle-on");
-    if (option.data("toggle-link")) {
-      window.location = option.data("toggle-link");
-    } else {
-      togglerDeactivate(
-        $(
-          "[data-toggle-group=" +
-            toggler.data("toggle-off-group") +
-            "]"
-        )
-      );
-      if (toggleOn) {
-        $.each(toggleOn.split(","), function(i, v) {
-          var activateGroup = $("[data-toggle-id=" + v + "]");
-          togglerActivate(activateGroup);
-          loadUninitializedTogglers(activateGroup);
-        });
+    case "button":
+      var checkOn = $(toggler.data("toggle-on")),
+        checkOff = $(toggler.data("toggle-off"));
+
+      togglerActivate(checkOn);
+      togglerDeactivate(checkOff);
+      loadUninitializedTogglers(checkOn);
+
+      break;
+    case "option":
+      var option = toggler.find("option:selected"),
+        toggleOn = option.data("toggle-on");
+      if (option.data("toggle-link")) {
+        window.location = option.data("toggle-link");
+      } else {
+        togglerDeactivate(
+          $(
+            "[data-toggle-group=" +
+              toggler.data("toggle-off-group") +
+              "]"
+          )
+        );
+        if (toggleOn) {
+          $.each(toggleOn.split(","), function(i, v) {
+            var activateGroup = $("[data-toggle-id=" + v + "]");
+            togglerActivate(activateGroup);
+            loadUninitializedTogglers(activateGroup);
+          });
+        }
       }
-    }
+      break;
   }
 };
 
