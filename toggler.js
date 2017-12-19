@@ -1,3 +1,11 @@
+$.fn.disableEl = function(){
+  return $(this).each( function(){ $(this).addClass("disabled").attr("disabled","disabled"); });
+}
+
+$.fn.enableEl = function(){
+  return $(this).each( function(){ $(this).removeClass("disabled").removeAttr("disabled"); });
+}
+
 var togglerActivate = function(el, onlyEnable) {
   el.each(function() {
     var testEl = $(this);
